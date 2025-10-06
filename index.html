@@ -3,52 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GDP Project – Team Recursion</title>
+  <title>C Programming Projects – Team Recursion</title>
   <style>
     body {
-      background-color: #0e0e0e;
-      color: #f0f0f0;
+      background-color: #0d0d0d;
+      color: #f5f5f5;
       font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
       padding: 0;
       text-align: center;
-      overflow-x: hidden;
     }
 
     header {
       background-color: #181818;
-      padding: 1rem 0;
+      padding: 1rem;
       box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     h1 {
-      margin: 0;
-      font-size: 1.7rem;
       color: #00bcd4;
+      margin: 0;
+      font-size: 1.6rem;
     }
 
     h2 {
-      color: #ffffff;
       font-weight: 500;
+      color: #ffffff;
       margin-top: 1rem;
+      font-size: 1.2rem;
     }
 
     .buttons {
-      margin: 1.5rem 0;
-      position: sticky;
-      top: 0;
-      background: #0e0e0e;
-      padding: 0.5rem 0;
-      z-index: 100;
+      margin: 1.2rem 0;
     }
 
     button {
       background-color: #00bcd4;
-      color: #fff;
+      color: white;
       border: none;
       padding: 0.8rem 1.2rem;
-      margin: 0 0.5rem;
-      border-radius: 8px;
+      margin: 0.4rem;
+      border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
       transition: background 0.3s, transform 0.2s;
@@ -59,88 +57,82 @@
       transform: scale(1.05);
     }
 
-    .embed {
+    .project {
       display: none;
-      margin: 0 auto;
-      width: 95%;
-      max-width: 1100px;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: opacity 0.5s ease-in-out;
-    }
-
-    .embed.active {
-      display: block;
       animation: fadeIn 0.5s ease-in-out;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to { opacity: 1; transform: scale(1); }
+    .project.active {
+      display: block;
     }
 
-    .scroll-container {
-      height: 80vh;
-      overflow-y: auto;
-      border-radius: 10px;
-      background: #101010;
-      padding: 0.5rem;
-    }
-
-    .info-box {
+    .info {
       background-color: #181818;
       border-radius: 10px;
       padding: 1rem;
       margin: 1rem auto;
       width: 90%;
-      max-width: 800px;
-      color: #ddd;
-      font-size: 1rem;
-      line-height: 1.6;
+      max-width: 900px;
       text-align: left;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .embed-container {
+      width: 95%;
+      max-width: 1100px;
+      height: 75vh;
+      margin: 0 auto 2rem;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     footer {
       background-color: #181818;
+      color: #999;
       padding: 1rem 0;
       margin-top: 2rem;
       font-size: 0.9rem;
-      color: #999;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>GDP Project – Team Recursion</h1>
+    <h1>C Programming Projects – Team Recursion</h1>
   </header>
 
   <div class="buttons">
-    <button onclick="showProject(1)">1. IPC using User-Defined Signals</button>
-    <button onclick="showProject(2)">2. Buddy System Memory Allocation</button>
+    <button onclick="showProject(1)">1️⃣ IPC using User-Defined Signals</button>
+    <button onclick="showProject(2)">2️⃣ Buddy System Memory Allocation</button>
   </div>
 
   <!-- Project 1 -->
-  <div id="project1" class="embed active">
+  <div id="project1" class="project active">
     <h2>INTER-PROCESS COMMUNICATION (IPC) USING USER-DEFINED SIGNALS</h2>
-    <div class="info-box">
-      <strong>Objective:</strong> To demonstrate how processes communicate in Linux using custom-defined signals.<br><br>
-      <strong>Concepts Used:</strong> Signals, process communication, system calls like <code>kill()</code> and <code>signal()</code>.<br><br>
-      <strong>Outcome:</strong> Understanding process synchronization and signal handling mechanisms in operating systems.
+    <div class="info">
+      <strong>Objective:</strong> Demonstrate how two processes communicate using signals in C.<br><br>
+      <strong>Concepts:</strong> Signals, Process Communication, System Calls.<br><br>
+      <strong>Outcome:</strong> Understanding inter-process synchronization using signal handling.
     </div>
-    <div class="scroll-container">
+    <div class="embed-container">
       <script src="//onlinegdb.com/embed/js/sstwoTD_J?theme=dark"></script>
     </div>
   </div>
 
   <!-- Project 2 -->
-  <div id="project2" class="embed">
+  <div id="project2" class="project">
     <h2>Implementation of Buddy System Memory Allocation</h2>
-    <div class="info-box">
-      <strong>Objective:</strong> To implement and visualize memory allocation using the Buddy System algorithm.<br><br>
-      <strong>Concepts Used:</strong> Memory management, binary tree partitioning, allocation and deallocation tracking.<br><br>
-      <strong>Outcome:</strong> Efficient management of dynamic memory and reduction of fragmentation.
+    <div class="info">
+      <strong>Objective:</strong> Implement dynamic memory allocation using the Buddy System algorithm.<br><br>
+      <strong>Concepts:</strong> Memory Management, Binary Tree Partitioning.<br><br>
+      <strong>Outcome:</strong> Efficient memory allocation and fragmentation control.
     </div>
-    <div class="scroll-container">
+    <div class="embed-container">
       <script src="//onlinegdb.com/embed/js/9NxwPKVBZe?theme=dark"></script>
     </div>
   </div>
@@ -151,7 +143,7 @@
 
   <script>
     function showProject(num) {
-      document.querySelectorAll('.embed').forEach(div => div.classList.remove('active'));
+      document.querySelectorAll('.project').forEach(p => p.classList.remove('active'));
       document.getElementById('project' + num).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
