@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GDP Project – Team Recursion</title>
+  <style>
+    body {
+      background-color: #0e0e0e;
+      color: #f0f0f0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #181818;
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.7rem;
+      color: #00bcd4;
+    }
+
+    h2 {
+      color: #ffffff;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+
+    .buttons {
+      margin: 1.5rem 0;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      margin: 0 0.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #0097a7;
+      transform: scale(1.05);
+    }
+
+    .embed {
+      display: none;
+      margin: 0 auto;
+      width: 95%;
+      max-width: 1100px;
+      height: 600px;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .embed.active {
+      display: block;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .info-box {
+      background-color: #181818;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem auto;
+      width: 90%;
+      max-width: 800px;
+      color: #ddd;
+      font-size: 1rem;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    footer {
+      background-color: #181818;
+      padding: 1rem 0;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>GDP Project – Team Recursion</h1>
+  </header>
+
+  <div class="buttons">
+    <button onclick="showProject(1)">1. IPC using User-Defined Signals</button>
+    <button onclick="showProject(2)">2. Buddy System Memory Allocation</button>
+  </div>
+
+  <!-- Project 1 -->
+  <div id="project1" class="embed active">
+    <h2>INTER-PROCESS COMMUNICATION (IPC) USING USER-DEFINED SIGNALS</h2>
+    <div class="info-box">
+      <strong>Objective:</strong> To demonstrate how processes communicate in Linux using custom-defined signals.<br><br>
+      <strong>Concepts Used:</strong> Signals, process communication, system calls like <code>kill()</code> and <code>signal()</code>.<br><br>
+      <strong>Outcome:</strong> Understanding process synchronization and signal handling mechanisms in operating systems.
+    </div>
+    <script src="//onlinegdb.com/embed/js/sstwoTD_J?theme=dark"></script>
+  </div>
+
+  <!-- Project 2 -->
+  <div id="project2" class="embed">
+    <h2>Implementation of Buddy System Memory Allocation</h2>
+    <div class="info-box">
+      <strong>Objective:</strong> To implement and visualize memory allocation using the Buddy System algorithm.<br><br>
+      <strong>Concepts Used:</strong> Memory management, binary tree partitioning, allocation and deallocation tracking.<br><br>
+      <strong>Outcome:</strong> Efficient management of dynamic memory and reduction of fragmentation.
+    </div>
+    <script src="//onlinegdb.com/embed/js/9NxwPKVBZe?theme=dark"></script>
+  </div>
+
+  <footer>
+    © Team Recursion | Operating Systems Project
+  </footer>
+
+  <script>
+    function showProject(num) {
+      document.querySelectorAll('.embed').forEach(div => div.classList.remove('active'));
+      document.getElementById('project' + num).classList.add('active');
+    }
+  </script>
+</body>
+</html>
