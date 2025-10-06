@@ -22,13 +22,13 @@
 
     h1 {
       margin: 0;
-      font-size: 1.7rem;
+      font-size: 1.5rem;
       color: #00bcd4;
     }
 
     h2 {
       color: #ffffff;
-      font-weight: 500;
+      font-weight: 400;
       margin-top: 1rem;
     }
 
@@ -45,12 +45,11 @@
       border-radius: 8px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      transition: background 0.3s;
     }
 
     button:hover {
       background-color: #0097a7;
-      transform: scale(1.05);
     }
 
     .embed {
@@ -61,7 +60,6 @@
       height: 600px;
       border-radius: 10px;
       overflow: hidden;
-      transition: opacity 0.5s ease-in-out;
     }
 
     .embed.active {
@@ -70,21 +68,8 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.97); }
+      from { opacity: 0; transform: scale(0.98); }
       to { opacity: 1; transform: scale(1); }
-    }
-
-    .info-box {
-      background-color: #181818;
-      border-radius: 10px;
-      padding: 1rem;
-      margin: 1rem auto;
-      width: 90%;
-      max-width: 800px;
-      color: #ddd;
-      font-size: 1rem;
-      line-height: 1.6;
-      text-align: left;
     }
 
     footer {
@@ -106,10 +91,28 @@
     <button onclick="showProject(2)">2. Buddy System Memory Allocation</button>
   </div>
 
-  <!-- Project 1 -->
   <div id="project1" class="embed active">
     <h2>INTER-PROCESS COMMUNICATION (IPC) USING USER-DEFINED SIGNALS</h2>
-    <div class="info-box">
+    <script src="//onlinegdb.com/embed/js/sstwoTD_J?theme=dark"></script>
+  </div>
+
+  <div id="project2" class="embed">
+    <h2>Implementation of Buddy System Memory Allocation</h2>
+    <script src="//onlinegdb.com/embed/js/9NxwPKVBZe?theme=dark"></script>
+  </div>
+
+  <footer>
+    © Team Recursion | Operating Systems Project
+  </footer>
+
+  <script>
+    function showProject(num) {
+      document.querySelectorAll('.embed').forEach(div => div.classList.remove('active'));
+      document.getElementById('project' + num).classList.add('active');
+    }
+  </script>
+</body>
+</html>
       <strong>Objective:</strong> To demonstrate how processes communicate in Linux using custom-defined signals.<br><br>
       <strong>Concepts Used:</strong> Signals, process communication, system calls like <code>kill()</code> and <code>signal()</code>.<br><br>
       <strong>Outcome:</strong> Understanding process synchronization and signal handling mechanisms in operating systems.
