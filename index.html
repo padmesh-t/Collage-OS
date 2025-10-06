@@ -1,47 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C Programming Projects – Team Recursion</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C Projects | Team Recursion</title>
   <style>
     body {
-      background-color: #0d0d0d;
-      color: #f5f5f5;
-      font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #0d1117;
+      color: #e6edf3;
       text-align: center;
     }
 
     header {
-      background-color: #181818;
+      background-color: #161b22;
       padding: 1rem;
-      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
     }
 
     h1 {
-      color: #00bcd4;
+      color: #58a6ff;
       margin: 0;
       font-size: 1.6rem;
     }
 
     h2 {
-      font-weight: 500;
-      color: #ffffff;
+      color: #f0f6fc;
       margin-top: 1rem;
-      font-size: 1.2rem;
     }
 
     .buttons {
-      margin: 1.2rem 0;
+      margin: 1rem 0;
     }
 
     button {
-      background-color: #00bcd4;
+      background-color: #238636;
       color: white;
       border: none;
       padding: 0.8rem 1.2rem;
@@ -49,11 +46,11 @@
       border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      transition: 0.3s;
     }
 
     button:hover {
-      background-color: #0097a7;
+      background-color: #2ea043;
       transform: scale(1.05);
     }
 
@@ -66,32 +63,49 @@
       display: block;
     }
 
-    .info {
-      background-color: #181818;
-      border-radius: 10px;
-      padding: 1rem;
-      margin: 1rem auto;
+    pre {
+      background-color: #161b22;
+      color: #e6edf3;
+      text-align: left;
       width: 90%;
       max-width: 900px;
-      text-align: left;
-      font-size: 1rem;
-      line-height: 1.5;
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
 
-    .embed-container {
-      width: 95%;
-      max-width: 1100px;
-      height: 75vh;
-      margin: 0 auto 2rem;
-      border-radius: 10px;
-      overflow: hidden;
+    img {
+      width: 90%;
+      max-width: 800px;
+      border-radius: 8px;
+      margin-top: 1rem;
+      border: 1px solid #30363d;
+    }
+
+    a.run-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      background-color: #1f6feb;
+      color: white;
+      padding: 0.7rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    a.run-btn:hover {
+      background-color: #388bfd;
+      transform: scale(1.05);
     }
 
     footer {
-      background-color: #181818;
-      color: #999;
-      padding: 1rem 0;
       margin-top: 2rem;
+      padding: 1rem;
+      background-color: #161b22;
+      color: #8b949e;
       font-size: 0.9rem;
     }
 
@@ -103,7 +117,7 @@
 </head>
 <body>
   <header>
-    <h1>C Programming Projects – Team Recursion</h1>
+    <h1>Operating Systems Project – Team Recursion</h1>
   </header>
 
   <div class="buttons">
@@ -114,27 +128,147 @@
   <!-- Project 1 -->
   <div id="project1" class="project active">
     <h2>INTER-PROCESS COMMUNICATION (IPC) USING USER-DEFINED SIGNALS</h2>
-    <div class="info">
-      <strong>Objective:</strong> Demonstrate how two processes communicate using signals in C.<br><br>
-      <strong>Concepts:</strong> Signals, Process Communication, System Calls.<br><br>
-      <strong>Outcome:</strong> Understanding inter-process synchronization using signal handling.
-    </div>
-    <div class="embed-container">
-      <script src="//onlinegdb.com/embed/js/sstwoTD_J?theme=dark"></script>
-    </div>
+    <pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;signal.h&gt;
+
+void handle_sigusr1(int sig) {
+    printf("[Child] Received SIGUSR1 from parent - Performing Task 1\n");
+}
+
+void handle_sigusr2(int sig) {
+    printf("[Child] Received SIGUSR2 from parent - Performing Task 2\n");
+    printf("[Child] Exiting now.\n");
+    exit(0);
+}
+
+int main() {
+    pid_t pid = fork();
+    if (pid < 0) {
+        perror("Fork failed");
+        exit(1);
+    } else if (pid == 0) {
+        printf("[Child] PID = %d, waiting for signals...\n", getpid());
+        signal(SIGUSR1, handle_sigusr1);
+        signal(SIGUSR2, handle_sigusr2);
+        while (1) { pause(); }
+    } else {
+        printf("[Parent] PID = %d, created child with PID = %d\n", getpid(), pid);
+        sleep(2);
+        printf("[Parent] Sending SIGUSR1 to child...\n");
+        kill(pid, SIGUSR1);
+        sleep(3);
+        printf("[Parent] Sending SIGUSR2 to child...\n");
+        kill(pid, SIGUSR2);
+        sleep(1);
+        printf("[Parent] Communication completed.\n");
+    }
+    return 0;
+}</code></pre>
+
+    <img src="ipc-output.png" alt="IPC Output Screenshot">
+    <br>
+    <a class="run-btn" href="https://onlinegdb.com/i5wyrO3dek" target="_blank">▶ Run on OnlineGDB</a>
   </div>
 
   <!-- Project 2 -->
   <div id="project2" class="project">
     <h2>Implementation of Buddy System Memory Allocation</h2>
-    <div class="info">
-      <strong>Objective:</strong> Implement dynamic memory allocation using the Buddy System algorithm.<br><br>
-      <strong>Concepts:</strong> Memory Management, Binary Tree Partitioning.<br><br>
-      <strong>Outcome:</strong> Efficient memory allocation and fragmentation control.
-    </div>
-    <div class="embed-container">
-      <script src="//onlinegdb.com/embed/js/9NxwPKVBZe?theme=dark"></script>
-    </div>
+    <pre><code>#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#define MAX_ORDER 5 
+#define MEMORY_SIZE (1 &lt;&lt; MAX_ORDER)
+typedef struct Block {
+    int size;
+    int start;
+    int free;
+} Block;
+Block memory[MEMORY_SIZE];
+void initialize_memory() {
+    for (int i = 0; i < MEMORY_SIZE; i++) {
+        memory[i].size = MEMORY_SIZE;
+        memory[i].start = 0;
+        memory[i].free = 1;
+    }
+    printf("Memory initialized with total size %d units.\n", MEMORY_SIZE);
+}
+int allocate(int request) {
+    int size = 1;
+    while (size < request) size *= 2;
+    if (size > MEMORY_SIZE) {
+        printf("Request too large!\n");
+        return -1;
+    }
+    for (int i = 0; i < MEMORY_SIZE; i += size) {
+        if (memory[i].free && memory[i].size >= size) {
+            memory[i].free = 0;
+            memory[i].size = size;
+            printf("Allocated block of size %d units at address %d\n", size, i);
+            return i;
+        }
+    }
+    printf("No suitable block found!\n");
+    return -1;
+}
+void deallocate(int address) {
+    if (address < 0 || address >= MEMORY_SIZE) {
+        printf("Invalid address.\n");
+        return;
+    }
+    int size = memory[address].size;
+    memory[address].free = 1;
+    printf("Deallocated block of size %d units at address %d\n", size, address);
+    int buddy = address ^ size;
+    if (buddy < MEMORY_SIZE && memory[buddy].free && memory[buddy].size == size) {
+        printf("Merging blocks %d and %d of size %d\n", address, buddy, size);
+        int merged_start = (buddy < address) ? buddy : address;
+        memory[merged_start].size = size * 2;
+        memory[merged_start].free = 1;
+        memory[address].size = memory[buddy].size = size * 2;
+    }
+}
+void show_status() {
+    printf("\n--- Memory Status ---\n");
+    for (int i = 0; i < MEMORY_SIZE; i++) {
+        if (memory[i].free)
+            printf("Block start: %d | size: %d | FREE\n", i, memory[i].size);
+        else
+            printf("Block start: %d | size: %d | USED\n", i, memory[i].size);
+    }
+    printf("---------------------\n");
+}
+int main() {
+    initialize_memory();
+    int ch, addr, size;
+    while (1) {
+        printf("\n1. Allocate\n2. Deallocate\n3. Show Status\n4. Exit\nEnter choice: ");
+        scanf("%d", &ch);
+        switch (ch) {
+            case 1:
+                printf("Enter size to allocate: ");
+                scanf("%d", &size);
+                allocate(size);
+                break;
+            case 2:
+                printf("Enter starting address to deallocate: ");
+                scanf("%d", &addr);
+                deallocate(addr);
+                break;
+            case 3:
+                show_status();
+                break;
+            case 4:
+                return 0;
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+}</code></pre>
+
+    <img src="buddy-output.png" alt="Buddy System Output Screenshot">
+    <br>
+    <a class="run-btn" href="https://onlinegdb.com/9NxwPKVBZe" target="_blank">▶ Run on OnlineGDB</a>
   </div>
 
   <footer>
