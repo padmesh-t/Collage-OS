@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C Program Runner – Recursion Team</title>
+  <title>C Program Runner</title>
   <style>
     body {
       font-family: 'Consolas', monospace;
@@ -14,8 +14,19 @@
       align-items: center;
       padding: 20px;
     }
-    h1 { color: #00ff88; }
-    textarea, input {
+    h1 {
+      color: #00ff88;
+      text-align: center;
+    }
+    .desc {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 15px;
+      width: 90%;
+      margin-bottom: 20px;
+    }
+    select, input {
       background-color: #000;
       color: #0f0;
       border: 1px solid #333;
@@ -23,9 +34,10 @@
       padding: 8px;
       width: 90%;
       font-size: 1em;
+      margin-top: 5px;
     }
     button {
-      margin-top: 10px;
+      margin-top: 15px;
       background-color: #00ff88;
       border: none;
       padding: 10px 20px;
@@ -34,7 +46,7 @@
       cursor: pointer;
     }
     #output {
-      margin-top: 15px;
+      margin-top: 20px;
       background-color: #000;
       color: #0f0;
       border: 1px solid #333;
@@ -45,43 +57,69 @@
       white-space: pre-wrap;
       border-radius: 6px;
     }
-    #inputBox {
-      margin-top: 10px;
-    }
   </style>
 </head>
 <body>
-  <h1>INTER-PROCESS COMMUNICATION (IPC) USING USER-DEFINED SIGNALS</h1>
-  <p>Team: Recursion</p>
+  <h1>Real C Program Runner</h1>
 
-  <textarea id="code" rows="10">
-// Example C program
-#include <stdio.h>
-
-int main() {
-    int a, b;
-    printf("Enter two numbers: ");
-    scanf("%d %d", &a, &b);
-    printf("Sum = %d", a + b);
-    return 0;
-}
-  </textarea>
-
-  <div id="inputBox">
-    <label>Program Input:</label>
-    <input id="input" placeholder="Type input here...">
+  <div class="desc" id="desc">
+    <h3>Program 1 – Inter-Process Communication (Signals)</h3>
+    <p>This program demonstrates communication between parent and child processes using user-defined signals <code>SIGUSR1</code> and <code>SIGUSR2</code>.</p>
   </div>
 
-  <button onclick="runCode()">Run</button>
+  <select id="programSelector" onchange="changeProgram()">
+    <option value="1">Program 1 – Signal Communication</option>
+    <option value="2">Program 2 – Buddy Memory Allocation</option>
+  </select>
+
+  <input id="input" placeholder="Enter input (if required)..." />
+
+  <button onclick="runCode()">▶ Run Program</button>
 
   <div id="output">Output will appear here...</div>
 
   <script>
+    const programs = {
+      1: `#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+void handle_sigusr1(int sig){printf("[Child] Received SIGUSR1 from parent - Performing Task 1\\n");}
+void handle_sigusr2(int sig){printf("[Child] Received SIGUSR2 from parent - Performing Task 2\\n");printf("[Child] Exiting now.\\n");exit(0);}
+int main(){pid_t pid=fork();if(pid<0){perror("Fork failed");exit(1);}else if(pid==0){printf("[Child] PID = %d, waiting for signals...\\n",getpid());signal(SIGUSR1,handle_sigusr1);signal(SIGUSR2,handle_sigusr2);while(1){pause();}}else{printf("[Parent] PID = %d, created child with PID = %d\\n",getpid(),pid);sleep(2);printf("[Parent] Sending SIGUSR1 to child...\\n");kill(pid,SIGUSR1);sleep(3);printf("[Parent] Sending SIGUSR2 to child...\\n");kill(pid,SIGUSR2);sleep(1);printf("[Parent] Communication completed.\\n");}return 0;}`,
+
+      2: `#include <stdio.h>
+#include <math.h>
+#define MAX_ORDER 5
+#define MEMORY_SIZE (1 << MAX_ORDER)
+typedef struct Block{int size;int start;int free;}Block;
+Block memory[MEMORY_SIZE];
+void initialize_memory(){for(int i=0;i<MEMORY_SIZE;i++){memory[i].size=MEMORY_SIZE;memory[i].start=0;memory[i].free=1;}printf("Memory initialized with total size %d units.\\n",MEMORY_SIZE);}
+int allocate(int request){int size=1;while(size<request)size*=2;if(size>MEMORY_SIZE){printf("Request too large!\\n");return -1;}for(int i=0;i<MEMORY_SIZE;i+=size){if(memory[i].free&&memory[i].size>=size){memory[i].free=0;memory[i].size=size;printf("Allocated block of size %d units at address %d\\n",size,i);return i;}}printf("No suitable block found!\\n");return -1;}
+void deallocate(int address){if(address<0||address>=MEMORY_SIZE){printf("Invalid address.\\n");return;}int size=memory[address].size;memory[address].free=1;printf("Deallocated block of size %d units at address %d\\n",size,address);int buddy=address^size;if(buddy<MEMORY_SIZE&&memory[buddy].free&&memory[buddy].size==size){printf("Merging blocks %d and %d of size %d\\n",address,buddy,size);int merged_start=(buddy<address)?buddy:address;memory[merged_start].size=size*2;memory[merged_start].free=1;memory[address].size=memory[buddy].size=size*2;}}
+void show_status(){printf("\\n--- Memory Status ---\\n");for(int i=0;i<MEMORY_SIZE;i++){if(memory[i].free)printf("Block start: %d | size: %d | FREE\\n",i,memory[i].size);else printf("Block start: %d | size: %d | USED\\n",i,memory[i].size);}printf("---------------------\\n");}
+int main(){initialize_memory();int ch,addr,size;while(1){printf("\\n1. Allocate\\n2. Deallocate\\n3. Show Status\\n4. Exit\\nEnter choice: ");scanf("%d",&ch);switch(ch){case 1:printf("Enter size to allocate: ");scanf("%d",&size);allocate(size);break;case 2:printf("Enter starting address to deallocate: ");scanf("%d",&addr);deallocate(addr);break;case 3:show_status();break;case 4:return 0;default:printf("Invalid choice!\\n");}}}`
+    };
+
+    function changeProgram() {
+      const desc = document.getElementById('desc');
+      const sel = document.getElementById('programSelector').value;
+      if (sel == 1) {
+        desc.innerHTML = `<h3>Program 1 – Inter-Process Communication (Signals)</h3>
+        <p>This program demonstrates parent–child communication using <code>SIGUSR1</code> and <code>SIGUSR2</code> signals.</p>`;
+      } else {
+        desc.innerHTML = `<h3>Program 2 – Buddy Memory Allocation</h3>
+        <p>This program simulates the Buddy Memory Allocation strategy, managing memory in power-of-two blocks efficiently.</p>`;
+      }
+      document.getElementById('output').innerText = "Output will appear here...";
+    }
+
     async function runCode() {
-      const code = document.getElementById('code').value;
+      const sel = document.getElementById('programSelector').value;
       const input = document.getElementById('input').value;
+      const code = programs[sel];
       const outputDiv = document.getElementById('output');
-      outputDiv.innerText = "Running your code...\n";
+      outputDiv.innerText = "⏳ Compiling and running...\n";
 
       const response = await fetch("https://emkc.org/api/v2/piston/execute", {
         method: "POST",
@@ -95,7 +133,7 @@ int main() {
       });
 
       const result = await response.json();
-      outputDiv.innerText = result.run.output || "No output";
+      outputDiv.innerText = result.run.output || "⚠ No output.";
     }
   </script>
 </body>
