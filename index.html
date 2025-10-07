@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C Program Runner</title>
+  <title>Recursion Team - C Program Runner</title>
   <style>
     body {
-      font-family: 'Consolas', monospace;
-      background-color: #111;
-      color: #eee;
+      font-family: "Consolas", monospace;
+      background-color: #0b0b0b;
+      color: #eaeaea;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -19,11 +19,11 @@
       text-align: center;
     }
     .desc {
-      background: #1a1a1a;
+      background: #151515;
       border: 1px solid #333;
       border-radius: 10px;
       padding: 15px;
-      width: 90%;
+      width: 95%;
       margin-bottom: 20px;
     }
     select, input {
@@ -32,7 +32,7 @@
       border: 1px solid #333;
       border-radius: 6px;
       padding: 8px;
-      width: 90%;
+      width: 95%;
       font-size: 1em;
       margin-top: 5px;
     }
@@ -50,7 +50,7 @@
       background-color: #000;
       color: #0f0;
       border: 1px solid #333;
-      width: 90%;
+      width: 95%;
       height: 250px;
       overflow-y: auto;
       padding: 10px;
@@ -60,19 +60,19 @@
   </style>
 </head>
 <body>
-  <h1>Real C Program Runner</h1>
+  <h1>Team Recursion - C Program Runner</h1>
 
   <div class="desc" id="desc">
     <h3>Program 1 – Inter-Process Communication (Signals)</h3>
-    <p>This program demonstrates communication between parent and child processes using user-defined signals <code>SIGUSR1</code> and <code>SIGUSR2</code>.</p>
+    <p>This program demonstrates communication between parent and child processes using user-defined signals <code>SIGUSR1</code> and <code>SIGUSR2</code>. As online compilers cannot execute process-based system calls, a sample output is shown instead.</p>
   </div>
 
   <select id="programSelector" onchange="changeProgram()">
-    <option value="1">Program 1 – Signal Communication</option>
-    <option value="2">Program 2 – Buddy Memory Allocation</option>
+    <option value="1">Program 1 – Signal Communication (Sample Output)</option>
+    <option value="2">Program 2 – Buddy Memory Allocation (Runnable)</option>
   </select>
 
-  <input id="input" placeholder="Enter input (if required)..." />
+  <input id="input" placeholder="Enter input (for Program 2 only)..." />
 
   <button onclick="runCode()">▶ Run Program</button>
 
@@ -80,14 +80,6 @@
 
   <script>
     const programs = {
-      1: `#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
-void handle_sigusr1(int sig){printf("[Child] Received SIGUSR1 from parent - Performing Task 1\\n");}
-void handle_sigusr2(int sig){printf("[Child] Received SIGUSR2 from parent - Performing Task 2\\n");printf("[Child] Exiting now.\\n");exit(0);}
-int main(){pid_t pid=fork();if(pid<0){perror("Fork failed");exit(1);}else if(pid==0){printf("[Child] PID = %d, waiting for signals...\\n",getpid());signal(SIGUSR1,handle_sigusr1);signal(SIGUSR2,handle_sigusr2);while(1){pause();}}else{printf("[Parent] PID = %d, created child with PID = %d\\n",getpid(),pid);sleep(2);printf("[Parent] Sending SIGUSR1 to child...\\n");kill(pid,SIGUSR1);sleep(3);printf("[Parent] Sending SIGUSR2 to child...\\n");kill(pid,SIGUSR2);sleep(1);printf("[Parent] Communication completed.\\n");}return 0;}`,
-
       2: `#include <stdio.h>
 #include <math.h>
 #define MAX_ORDER 5
@@ -101,24 +93,43 @@ void show_status(){printf("\\n--- Memory Status ---\\n");for(int i=0;i<MEMORY_SI
 int main(){initialize_memory();int ch,addr,size;while(1){printf("\\n1. Allocate\\n2. Deallocate\\n3. Show Status\\n4. Exit\\nEnter choice: ");scanf("%d",&ch);switch(ch){case 1:printf("Enter size to allocate: ");scanf("%d",&size);allocate(size);break;case 2:printf("Enter starting address to deallocate: ");scanf("%d",&addr);deallocate(addr);break;case 3:show_status();break;case 4:return 0;default:printf("Invalid choice!\\n");}}}`
     };
 
+    const sampleOutput = `[Parent] PID = 1024, created child with PID = 1025
+[Child] PID = 1025, waiting for signals...
+[Parent] Sending SIGUSR1 to child...
+[Child] Received SIGUSR1 from parent - Performing Task 1
+[Parent] Sending SIGUSR2 to child...
+[Child] Received SIGUSR2 from parent - Performing Task 2
+[Child] Exiting now.
+[Parent] Communication completed.`;
+
     function changeProgram() {
-      const desc = document.getElementById('desc');
-      const sel = document.getElementById('programSelector').value;
+      const desc = document.getElementById("desc");
+      const sel = document.getElementById("programSelector").value;
+      const input = document.getElementById("input");
       if (sel == 1) {
         desc.innerHTML = `<h3>Program 1 – Inter-Process Communication (Signals)</h3>
-        <p>This program demonstrates parent–child communication using <code>SIGUSR1</code> and <code>SIGUSR2</code> signals.</p>`;
+        <p>This program demonstrates parent–child communication using <code>SIGUSR1</code> and <code>SIGUSR2</code> signals. A sample output is displayed below.</p>`;
+        input.disabled = true;
+        input.value = "";
       } else {
         desc.innerHTML = `<h3>Program 2 – Buddy Memory Allocation</h3>
-        <p>This program simulates the Buddy Memory Allocation strategy, managing memory in power-of-two blocks efficiently.</p>`;
+        <p>This program simulates Buddy System memory allocation strategy, managing blocks efficiently in powers of two.</p>`;
+        input.disabled = false;
       }
-      document.getElementById('output').innerText = "Output will appear here...";
+      document.getElementById("output").innerText = "Output will appear here...";
     }
 
     async function runCode() {
-      const sel = document.getElementById('programSelector').value;
-      const input = document.getElementById('input').value;
+      const sel = document.getElementById("programSelector").value;
+      const input = document.getElementById("input").value;
+      const outputDiv = document.getElementById("output");
+
+      if (sel == 1) {
+        outputDiv.innerText = sampleOutput;
+        return;
+      }
+
       const code = programs[sel];
-      const outputDiv = document.getElementById('output');
       outputDiv.innerText = "⏳ Compiling and running...\n";
 
       const response = await fetch("https://emkc.org/api/v2/piston/execute", {
@@ -128,8 +139,8 @@ int main(){initialize_memory();int ch,addr,size;while(1){printf("\\n1. Allocate\
           language: "c",
           version: "10.2.0",
           files: [{ name: "main.c", content: code }],
-          stdin: input
-        })
+          stdin: input,
+        }),
       });
 
       const result = await response.json();
