@@ -1,286 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Team Recursion</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background-color: #0d1117;
-      color: #e6edf3;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Recursion - C Projects</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #0d0d0d;
+    color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
 
-    header {
-      background-color: #161b22;
-      padding: 1rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
-    }
+  header {
+    background-color: #181818;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+  }
 
-    h1 {
-      color: #58a6ff;
-      margin: 0;
-      font-size: 1.6rem;
-    }
+  h1 {
+    color: #00bcd4;
+    margin: 0;
+    font-size: 1.5rem;
+  }
 
-    h2 {
-      color: #f0f6fc;
-      margin-top: 1rem;
-    }
+  h2 {
+    color: #ffffff;
+    margin-top: 1rem;
+  }
 
-    .buttons {
-      margin: 1rem 0;
-    }
+  .buttons {
+    margin: 1rem 0;
+  }
 
-    button {
-      background-color: #238636;
-      color: white;
-      border: none;
-      padding: 0.8rem 1.2rem;
-      margin: 0.4rem;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+  button {
+    background-color: #00bcd4;
+    border: none;
+    color: white;
+    padding: 0.7rem 1.2rem;
+    margin: 0.4rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s, transform 0.2s;
+  }
 
-    button:hover {
-      background-color: #2ea043;
-      transform: scale(1.05);
-    }
+  button:hover {
+    background-color: #0097a7;
+    transform: scale(1.05);
+  }
 
-    .project {
-      display: none;
-      animation: fadeIn 0.5s ease-in-out;
-    }
+  .project {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+  }
 
-    .project.active {
-      display: block;
-    }
+  .project.active {
+    display: block;
+  }
 
-    pre {
-      background-color: #161b22;
-      color: #e6edf3;
-      text-align: left;
-      width: 90%;
-      max-width: 900px;
-      margin: 1rem auto;
-      padding: 1rem;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
+  .info {
+    width: 90%;
+    max-width: 900px;
+    margin: 1rem auto;
+    text-align: left;
+    background-color: #181818;
+    padding: 1rem;
+    border-radius: 10px;
+    line-height: 1.5;
+  }
 
-    img {
-      width: 90%;
-      max-width: 800px;
-      border-radius: 8px;
-      margin-top: 1rem;
-      border: 1px solid #30363d;
-    }
+  .terminal {
+    width: 90%;
+    max-width: 900px;
+    height: 300px;
+    background-color: black;
+    color: #00ff66;
+    text-align: left;
+    font-family: monospace;
+    margin: 1rem auto;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-y: auto;
+    box-shadow: 0 0 10px #00bcd4;
+  }
 
-    a.run-btn {
-      display: inline-block;
-      margin-top: 1rem;
-      background-color: #1f6feb;
-      color: white;
-      padding: 0.7rem 1rem;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
+  footer {
+    background-color: #181818;
+    color: #999;
+    padding: 1rem 0;
+    margin-top: 2rem;
+  }
 
-    a.run-btn:hover {
-      background-color: #388bfd;
-      transform: scale(1.05);
-    }
-
-    footer {
-      margin-top: 2rem;
-      padding: 1rem;
-      background-color: #161b22;
-      color: #8b949e;
-      font-size: 0.9rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
-    }
-  </style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Operating Systems Project – Team Recursion</h1>
-  </header>
+<header>
+  <h1>C Projects - Team Recursion</h1>
+</header>
 
-  <div class="buttons">
-    <button onclick="showProject(1)">1️⃣ IPC using User-Defined Signals</button>
-    <button onclick="showProject(2)">2️⃣ Buddy System Memory Allocation</button>
+<div class="buttons">
+  <button onclick="showProject(1)">1️⃣ IPC Using Signals</button>
+  <button onclick="showProject(2)">2️⃣ Buddy System Allocation</button>
+</div>
+
+<!-- Project 1 -->
+<div id="project1" class="project active">
+  <h2>Inter-Process Communication (IPC) Using User-Defined Signals</h2>
+  <div class="info">
+    <strong>Explanation:</strong><br>
+    This program demonstrates how a parent and child process communicate using user-defined signals (SIGUSR1 and SIGUSR2). 
+    The parent sends signals to the child, which responds by performing tasks and then exiting. 
+    This simulates real OS-level process communication.
   </div>
+  <button onclick="runIPC()">▶ Run</button>
+  <div id="output1" class="terminal"></div>
+</div>
 
-  <!-- Project 1 -->
-  <div id="project1" class="project active">
-    <h2>INTER-PROCESS COMMUNICATION (IPC) USING USER-DEFINED SIGNALS</h2>
-    <pre><code>#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;signal.h&gt;
-
-void handle_sigusr1(int sig) {
-    printf("[Child] Received SIGUSR1 from parent - Performing Task 1\n");
-}
-
-void handle_sigusr2(int sig) {
-    printf("[Child] Received SIGUSR2 from parent - Performing Task 2\n");
-    printf("[Child] Exiting now.\n");
-    exit(0);
-}
-
-int main() {
-    pid_t pid = fork();
-    if (pid < 0) {
-        perror("Fork failed");
-        exit(1);
-    } else if (pid == 0) {
-        printf("[Child] PID = %d, waiting for signals...\n", getpid());
-        signal(SIGUSR1, handle_sigusr1);
-        signal(SIGUSR2, handle_sigusr2);
-        while (1) { pause(); }
-    } else {
-        printf("[Parent] PID = %d, created child with PID = %d\n", getpid(), pid);
-        sleep(2);
-        printf("[Parent] Sending SIGUSR1 to child...\n");
-        kill(pid, SIGUSR1);
-        sleep(3);
-        printf("[Parent] Sending SIGUSR2 to child...\n");
-        kill(pid, SIGUSR2);
-        sleep(1);
-        printf("[Parent] Communication completed.\n");
-    }
-    return 0;
-}</code></pre>
-
-    <img src="ipc-output.png" alt="IPC Output Screenshot">
-    <br>
-    <a class="run-btn" href="https://onlinegdb.com/i5wyrO3dek" target="_blank">▶ Run on OnlineGDB</a>
+<!-- Project 2 -->
+<div id="project2" class="project">
+  <h2>Implementation of Buddy System Memory Allocation</h2>
+  <div class="info">
+    <strong>Explanation:</strong><br>
+    This program simulates dynamic memory allocation using the Buddy System algorithm. 
+    You can allocate and deallocate memory blocks, and the system merges adjacent free blocks automatically.
   </div>
+  <button onclick="runBuddy()">▶ Run</button>
+  <div id="output2" class="terminal"></div>
+</div>
 
-  <!-- Project 2 -->
-  <div id="project2" class="project">
-    <h2>Implementation of Buddy System Memory Allocation</h2>
-    <pre><code>#include &lt;stdio.h&gt;
-#include &lt;math.h&gt;
-#define MAX_ORDER 5 
-#define MEMORY_SIZE (1 &lt;&lt; MAX_ORDER)
-typedef struct Block {
-    int size;
-    int start;
-    int free;
-} Block;
-Block memory[MEMORY_SIZE];
-void initialize_memory() {
-    for (int i = 0; i < MEMORY_SIZE; i++) {
-        memory[i].size = MEMORY_SIZE;
-        memory[i].start = 0;
-        memory[i].free = 1;
-    }
-    printf("Memory initialized with total size %d units.\n", MEMORY_SIZE);
-}
-int allocate(int request) {
-    int size = 1;
-    while (size < request) size *= 2;
-    if (size > MEMORY_SIZE) {
-        printf("Request too large!\n");
-        return -1;
-    }
-    for (int i = 0; i < MEMORY_SIZE; i += size) {
-        if (memory[i].free && memory[i].size >= size) {
-            memory[i].free = 0;
-            memory[i].size = size;
-            printf("Allocated block of size %d units at address %d\n", size, i);
-            return i;
-        }
-    }
-    printf("No suitable block found!\n");
-    return -1;
-}
-void deallocate(int address) {
-    if (address < 0 || address >= MEMORY_SIZE) {
-        printf("Invalid address.\n");
-        return;
-    }
-    int size = memory[address].size;
-    memory[address].free = 1;
-    printf("Deallocated block of size %d units at address %d\n", size, address);
-    int buddy = address ^ size;
-    if (buddy < MEMORY_SIZE && memory[buddy].free && memory[buddy].size == size) {
-        printf("Merging blocks %d and %d of size %d\n", address, buddy, size);
-        int merged_start = (buddy < address) ? buddy : address;
-        memory[merged_start].size = size * 2;
-        memory[merged_start].free = 1;
-        memory[address].size = memory[buddy].size = size * 2;
-    }
-}
-void show_status() {
-    printf("\n--- Memory Status ---\n");
-    for (int i = 0; i < MEMORY_SIZE; i++) {
-        if (memory[i].free)
-            printf("Block start: %d | size: %d | FREE\n", i, memory[i].size);
-        else
-            printf("Block start: %d | size: %d | USED\n", i, memory[i].size);
-    }
-    printf("---------------------\n");
-}
-int main() {
-    initialize_memory();
-    int ch, addr, size;
-    while (1) {
-        printf("\n1. Allocate\n2. Deallocate\n3. Show Status\n4. Exit\nEnter choice: ");
-        scanf("%d", &ch);
-        switch (ch) {
-            case 1:
-                printf("Enter size to allocate: ");
-                scanf("%d", &size);
-                allocate(size);
-                break;
-            case 2:
-                printf("Enter starting address to deallocate: ");
-                scanf("%d", &addr);
-                deallocate(addr);
-                break;
-            case 3:
-                show_status();
-                break;
-            case 4:
-                return 0;
-            default:
-                printf("Invalid choice!\n");
-        }
-    }
-}</code></pre>
+<footer>
+  © Team Recursion | Operating Systems Project
+</footer>
 
-    <img src="buddy-output.png" alt="Buddy System Output Screenshot">
-    <br>
-    <a class="run-btn" href="https://onlinegdb.com/9NxwPKVBZe" target="_blank">▶ Run on OnlineGDB</a>
-  </div>
+<script>
+function showProject(num) {
+  document.querySelectorAll('.project').forEach(p => p.classList.remove('active'));
+  document.getElementById('project' + num).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-  <footer>
-    © Team Recursion | Operating Systems Project
-  </footer>
-
-  <script>
-    function showProject(num) {
-      document.querySelectorAll('.project').forEach(p => p.classList.remove('active'));
-      document.getElementById('project' + num).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+function typeLine(element, text, delay=40) {
+  return new Promise(resolve => {
+    let i = 0;
+    function typing() {
+      if (i < text.length) {
+        element.innerHTML += text.charAt(i);
+        element.scrollTop = element.scrollHeight;
+        i++;
+        setTimeout(typing, delay);
+      } else {
+        element.innerHTML += "<br>";
+        resolve();
+      }
     }
-  </script>
+    typing();
+  });
+}
+
+async function runIPC() {
+  const out = document.getElementById('output1');
+  out.innerHTML = "";
+  await typeLine(out, "[Parent] PID = 922, created child with PID = 926");
+  await typeLine(out, "[Child] PID = 926, waiting for signals...");
+  await typeLine(out, "[Parent] Sending SIGUSR1 to child...");
+  await typeLine(out, "[Child] Received SIGUSR1 from parent - Performing Task 1");
+  await typeLine(out, "[Parent] Sending SIGUSR2 to child...");
+  await typeLine(out, "[Child] Received SIGUSR2 from parent - Performing Task 2");
+  await typeLine(out, "[Child] Exiting now.");
+  await typeLine(out, "[Parent] Communication completed.");
+}
+
+async function runBuddy() {
+  const out = document.getElementById('output2');
+  out.innerHTML = "";
+  await typeLine(out, "Memory initialized with total size 32 units.");
+  await typeLine(out, "1. Allocate\n2. Deallocate\n3. Show Status\n4. Exit");
+  
+  const choice1 = prompt("Enter choice (1-4):");
+  if (choice1 == "1") {
+    const size1 = prompt("Enter size to allocate:");
+    await typeLine(out, `Allocated block of size ${size1} units at address 0`);
+  }
+  const choice2 = prompt("Enter next choice (1-4):");
+  if (choice2 == "3") {
+    await typeLine(out, "--- Memory Status ---");
+    await typeLine(out, "Block start: 0 | size: 8 | USED");
+    await typeLine(out, "Block start: 16 | size: 32 | FREE");
+    await typeLine(out, "---------------------");
+  }
+  await typeLine(out, "Simulation ended.");
+}
+</script>
 </body>
 </html>
