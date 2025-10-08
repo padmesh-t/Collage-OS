@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>C Project – Interactive Terminal</title>
+<title>OS Out Of Syllabus</title>
 <style>
   body {
     background: #0b0b0b;
@@ -31,7 +31,7 @@
     color: #000;
     border: none;
     padding: 10px 20px;
-    margin: 5px 0;
+    margin: 5px 5px;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 6px;
@@ -72,11 +72,15 @@
   .prompt span {
     margin-right: 5px;
   }
+  #clearBtn {
+    display: none;
+    margin-bottom: 10px;
+  }
 </style>
 </head>
 <body>
 
-<h1>Team Recursion - C Project</h1>
+<h1>Team Recursion</h1>
 
 <div class="desc" id="descBox">
   <h3>Program 1 – IPC Using Signals</h3>
@@ -89,6 +93,7 @@
 </select>
 
 <button onclick="runProgram()">▶ Run Program</button>
+<button id="clearBtn" onclick="resetTerminal()">🧹 Clear Terminal</button>
 
 <div id="terminal"></div>
 
@@ -102,9 +107,10 @@ const terminal = document.getElementById("terminal");
 const inputLine = document.getElementById("inputLine");
 const promptContainer = document.getElementById("promptContainer");
 const descBox = document.getElementById("descBox");
+const clearBtn = document.getElementById("clearBtn");
 
 let program = 1;
-let memory = Array(32).fill("FREE");
+let memory = Array(32).fill(null);
 let runningBuddy = false;
 
 function println(text) {
@@ -120,8 +126,8 @@ function changeProgram() {
   program = document.getElementById("programSelector").value;
   resetTerminal();
   promptContainer.style.display = "none";
+  clearBtn.style.display = "none";
 
-  // ✅ Update description dynamically
   if (program == 1) {
     descBox.innerHTML = `
       <h3>Program 1 – IPC Using Signals</h3>
@@ -154,10 +160,12 @@ async function runProgram() {
     }
   } else {
     runningBuddy = true;
-    memory = Array(32).fill("FREE");
-    println("Buddy Memory Allocator Initialized (32 units)");
+    memory = Array(32).fill(null);
+    println("🧠 Buddy Allocator v1.0 - Team Recursion");
     println("Commands: alloc <size>, dealloc <addr>, status, exit");
+    println("---------------------------------------------");
     promptContainer.style.display = "flex";
+    clearBtn.style.display = "inline-block";
     inputLine.focus();
   }
 }
@@ -174,33 +182,46 @@ inputLine.addEventListener("keydown", (e) => {
 function handleCommand(cmd) {
   if (!runningBuddy) return;
 
-  cmd = cmd.replace(/[<>]/g, "").trim().toLowerCase(); // ✅ lowercased
+  cmd = cmd.replace(/[<>]/g, "").trim().toLowerCase();
 
   if (cmd.startsWith("alloc")) {
     const size = parseInt(cmd.split(" ")[1]);
-    const idx = memory.indexOf("FREE");
-    if (idx === -1) println("No block available");
-    else {
-      memory[idx] = "USED";
-      println(`Allocated ${size} units at block ${idx}`);
+    const idx = memory.indexOf(null);
+    if (isNaN(size) || size <= 0) {
+      println("⚠️ Invalid size. Usage: alloc <size>");
+    } else if (idx === -1) {
+      println("❌ No block available");
+    } else {
+      memory[idx] = size;
+      println(`✅ Allocated ${size} units at block ${idx}`);
     }
   } else if (cmd.startsWith("dealloc")) {
     const addr = parseInt(cmd.split(" ")[1]);
-    if (!isNaN(addr) && memory[addr] === "USED") {
-      memory[addr] = "FREE";
-      println(`Deallocated block ${addr}`);
+    if (!isNaN(addr) && memory[addr] !== null) {
+      memory[addr] = null;
+      println(`🗑️ Deallocated block ${addr}`);
     } else {
-      println("Invalid block or already free");
+      println("⚠️ Invalid block or already free");
     }
   } else if (cmd === "status") {
-    println("--- Memory Status ---");
-    memory.forEach((b, i) => println(`Block ${i}: ${b}`));
+    let allocatedBlocks = memory
+      .map((size, i) => size !== null ? `Block ${i}: ${size} units` : null)
+      .filter(Boolean);
+    if (allocatedBlocks.length === 0) {
+      println("📊 No memory allocated.");
+    } else {
+      println("--- 📊 Allocated Blocks ---");
+      allocatedBlocks.forEach(b => println(b));
+      const total = memory.reduce((a, b) => a + (b || 0), 0);
+      println(`Total Allocated: ${total} units`);
+    }
   } else if (cmd === "exit") {
-    println("Exiting Buddy Allocator...");
+    println("👋 Exiting Buddy Allocator...");
     promptContainer.style.display = "none";
+    clearBtn.style.display = "none";
     runningBuddy = false;
   } else {
-    println("Unknown command. Try: alloc <size>, dealloc <addr>, status, exit");
+    println("❓ Unknown command. Try: alloc <size>, dealloc <addr>, status, exit");
   }
 }
 </script>
