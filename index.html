@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>OS Out Of Syllabus</title>
+<title>OS Out of syllabus</title>
 <style>
   body {
     background: #0b0b0b;
@@ -72,10 +72,6 @@
   .prompt span {
     margin-right: 5px;
   }
-  #clearBtn {
-    display: none;
-    margin-bottom: 10px;
-  }
 </style>
 </head>
 <body>
@@ -93,7 +89,6 @@
 </select>
 
 <button onclick="runProgram()">▶ Run Program</button>
-<button id="clearBtn" onclick="resetTerminal()">🧹 Clear Terminal</button>
 
 <div id="terminal"></div>
 
@@ -107,7 +102,6 @@ const terminal = document.getElementById("terminal");
 const inputLine = document.getElementById("inputLine");
 const promptContainer = document.getElementById("promptContainer");
 const descBox = document.getElementById("descBox");
-const clearBtn = document.getElementById("clearBtn");
 
 let program = 1;
 let memory = Array(32).fill(null);
@@ -126,7 +120,6 @@ function changeProgram() {
   program = document.getElementById("programSelector").value;
   resetTerminal();
   promptContainer.style.display = "none";
-  clearBtn.style.display = "none";
 
   if (program == 1) {
     descBox.innerHTML = `
@@ -162,10 +155,9 @@ async function runProgram() {
     runningBuddy = true;
     memory = Array(32).fill(null);
     println("🧠 Buddy Allocator v1.0 - Team Recursion");
-    println("Commands: alloc <size>, dealloc <addr>, status, exit");
+    println("Type 'help' to see available commands.");
     println("---------------------------------------------");
     promptContainer.style.display = "flex";
-    clearBtn.style.display = "inline-block";
     inputLine.focus();
   }
 }
@@ -215,13 +207,22 @@ function handleCommand(cmd) {
       const total = memory.reduce((a, b) => a + (b || 0), 0);
       println(`Total Allocated: ${total} units`);
     }
+  } else if (cmd === "clear") {
+    resetTerminal();
+  } else if (cmd === "help") {
+    println("📚 Available Commands:");
+    println("alloc <size>   - Allocate memory");
+    println("dealloc <addr> - Deallocate memory");
+    println("status         - Show allocated blocks");
+    println("clear          - Clear the terminal");
+    println("help           - Show this help menu");
+    println("exit           - Exit the allocator");
   } else if (cmd === "exit") {
     println("👋 Exiting Buddy Allocator...");
     promptContainer.style.display = "none";
-    clearBtn.style.display = "none";
     runningBuddy = false;
   } else {
-    println("❓ Unknown command. Try: alloc <size>, dealloc <addr>, status, exit");
+    println("❓ Unknown command. Type 'help' to see options.");
   }
 }
 </script>
