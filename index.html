@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>C Project – Interactive Terminal</title>
 <style>
   body {
@@ -16,8 +16,10 @@
   }
   h1 {
     color: #00ffae;
+    text-align: center;
   }
   .desc {
+    width: 90%;
     max-width: 800px;
     background: #151515;
     padding: 15px;
@@ -51,7 +53,7 @@
     align-items: flex-start;
   }
   #inputLine {
-    width: 90%;
+    width: 100%;
     background: transparent;
     border: none;
     color: #00ffae;
@@ -76,19 +78,20 @@
 
 <h1>Team Recursion - C Project</h1>
 
-<div class="desc">
-  <h3>Program 1 – Signals</h3>
-  <p>This shows how parent and child processes communicate using signals.</p>
+<div class="desc" id="descBox">
+  <h3>Program 1 – IPC Using Signals</h3>
+  <p>This program demonstrates communication between parent and child processes using user-defined signals (SIGUSR1 and SIGUSR2).</p>
 </div>
 
 <select id="programSelector" onchange="changeProgram()">
-  <option value="1">Program 1 – Signal Output</option>
+  <option value="1">Program 1 – IPC Signals</option>
   <option value="2">Program 2 – Buddy Allocator (Interactive)</option>
 </select>
 
 <button onclick="runProgram()">▶ Run Program</button>
 
 <div id="terminal"></div>
+
 <div class="prompt" id="promptContainer" style="display:none;">
   <span>&gt;</span>
   <input id="inputLine" type="text" autofocus autocomplete="off" />
@@ -98,6 +101,8 @@
 const terminal = document.getElementById("terminal");
 const inputLine = document.getElementById("inputLine");
 const promptContainer = document.getElementById("promptContainer");
+const descBox = document.getElementById("descBox");
+
 let program = 1;
 let memory = Array(32).fill("FREE");
 let runningBuddy = false;
@@ -115,6 +120,19 @@ function changeProgram() {
   program = document.getElementById("programSelector").value;
   resetTerminal();
   promptContainer.style.display = "none";
+
+  // ✅ Update description dynamically
+  if (program == 1) {
+    descBox.innerHTML = `
+      <h3>Program 1 – IPC Using Signals</h3>
+      <p>This program demonstrates communication between parent and child processes using user-defined signals (SIGUSR1 and SIGUSR2).</p>
+    `;
+  } else {
+    descBox.innerHTML = `
+      <h3>Program 2 – Buddy Memory Allocation</h3>
+      <p>This interactive program simulates a buddy system memory allocator. You can allocate, deallocate memory, and view memory status in real time.</p>
+    `;
+  }
 }
 
 async function runProgram() {
@@ -155,85 +173,8 @@ inputLine.addEventListener("keydown", (e) => {
 
 function handleCommand(cmd) {
   if (!runningBuddy) return;
-  cmd = cmd.replace(/[<>]/g, "").trim(); // ✅ Fix: remove < >
 
-  if (cmd.startsWith("alloc")) {
-    const size = parseInt(cmd.split(" ")[1]);
-    const idx = memory.indexOf("FREE");
-    if (idx === -1) println("No block available");
-    else {
-      memory[idx] = "USED";
-      println(`Allocated ${size} units at block ${idx}`);
-    }
-  } else if (cmd.startsWith("dealloc")) {
-    const addr = parseInt(cmd.split(" ")[1]);
-    if (!isNaN(addr) && memory[addr] === "USED") {
-      memory[addr] = "FREE";
-      println(`Deallocated block ${addr}`);
-    } else {
-      println("Invalid block or already free");
-    }
-  } else if (cmd === "status") {
-    println("--- Memory Status ---");
-    memory.forEach((b, i) => println(`Block ${i}: ${b}`));
-  } else if (cmd === "exit") {
-    println("Exiting Buddy Allocator...");
-    promptContainer.style.display = "none";
-    runningBuddy = false;
-  } else {
-    println("Unknown command. Try: alloc <size>, dealloc <addr>, status, exit");
-  }
-}
-</script>
-
-</body>
-</html>
-
-function changeProgram() {
-  program = document.getElementById("programSelector").value;
-  resetTerminal();
-  promptContainer.style.display = "none";
-}
-
-async function runProgram() {
-  resetTerminal();
-  if (program == 1) {
-    let sampleOutput = [
-      "[Parent] PID = 1024, created child with PID = 1025",
-      "[Child] PID = 1025, waiting for signals...",
-      "[Parent] Sending SIGUSR1...",
-      "[Child] Received SIGUSR1 - Task 1 running",
-      "[Parent] Sending SIGUSR2...",
-      "[Child] Received SIGUSR2 - Task 2 running",
-      "[Child] Exiting...",
-      "[Parent] Communication completed."
-    ];
-    for (let line of sampleOutput) {
-      println(line);
-      await new Promise(r => setTimeout(r, 800));
-    }
-  } else {
-    runningBuddy = true;
-    memory = Array(32).fill("FREE");
-    println("Buddy Memory Allocator Initialized (32 units)");
-    println("Commands: alloc <size>, dealloc <addr>, status, exit");
-    promptContainer.style.display = "flex";
-    inputLine.focus();
-  }
-}
-
-inputLine.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    const cmd = inputLine.value.trim();
-    println("> " + cmd);
-    handleCommand(cmd);
-    inputLine.value = "";
-  }
-});
-
-function handleCommand(cmd) {
-  if (!runningBuddy) return;
-  cmd = cmd.replace(/[<>]/g, "").trim(); // ✅ Fix: remove < >
+  cmd = cmd.replace(/[<>]/g, "").trim().toLowerCase(); // ✅ lowercased
 
   if (cmd.startsWith("alloc")) {
     const size = parseInt(cmd.split(" ")[1]);
