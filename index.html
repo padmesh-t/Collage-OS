@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Team Recursion - C Project</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Project – Interactive Terminal</title>
 <style>
   body {
-    margin: 0;
     background: #0b0b0b;
-    color: #eaeaea;
+    color: #00ffae;
     font-family: "Fira Code", monospace;
     display: flex;
     flex-direction: column;
@@ -17,15 +16,12 @@
   }
   h1 {
     color: #00ffae;
-    margin-bottom: 10px;
-    text-align: center;
   }
   .desc {
     max-width: 800px;
     background: #151515;
     padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #333;
+    border-radius: 8px;
     margin-bottom: 20px;
   }
   select, button {
@@ -33,49 +29,46 @@
     color: #000;
     border: none;
     padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 1em;
-    cursor: pointer;
     margin: 5px 0;
-  }
-  select {
-    width: 100%;
-    max-width: 500px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 6px;
   }
   #terminal {
-    width: 100%;
+    background: #000;
+    width: 90%;
     max-width: 800px;
     height: 400px;
-    background: #000;
-    color: #00ffae;
-    border: 1px solid #333;
-    border-radius: 8px;
     padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
     overflow-y: auto;
     font-size: 1rem;
     line-height: 1.5;
     white-space: pre-wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  #terminal:focus {
+  #inputLine {
+    width: 90%;
+    background: transparent;
+    border: none;
+    color: #00ffae;
+    font-family: "Fira Code", monospace;
+    font-size: 1rem;
     outline: none;
   }
-  .cursor {
-    display: inline-block;
-    width: 8px;
-    background: #00ffae;
-    margin-left: 2px;
-    animation: blink 1s steps(2, start) infinite;
+  .prompt {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 90%;
+    max-width: 800px;
+    margin-top: 5px;
   }
-  @keyframes blink {
-    to {
-      background: transparent;
-    }
-  }
-  footer {
-    margin-top: 20px;
-    font-size: 0.9em;
-    color: #777;
-    text-align: center;
+  .prompt span {
+    margin-right: 5px;
   }
 </style>
 </head>
@@ -83,120 +76,190 @@
 
 <h1>Team Recursion - C Project</h1>
 
-<div class="desc" id="desc">
-  <h3>Program 1 – Inter-Process Communication (Signals)</h3>
-  <p>This program demonstrates parent-child communication using <code>SIGUSR1</code> and <code>SIGUSR2</code>. The sample output is displayed below.</p>
+<div class="desc">
+  <h3>Program 1 – Signals</h3>
+  <p>This shows how parent and child processes communicate using signals.</p>
 </div>
 
 <select id="programSelector" onchange="changeProgram()">
-  <option value="1">Program 1 – Signal Communication (Sample Output)</option>
-  <option value="2">Program 2 – Buddy Memory Allocation (Interactive Runtime)</option>
+  <option value="1">Program 1 – Signal Output</option>
+  <option value="2">Program 2 – Buddy Allocator (Interactive)</option>
 </select>
 
 <button onclick="runProgram()">▶ Run Program</button>
 
-<div id="terminal" contenteditable="true" spellcheck="false"></div>
-
-<footer>Created by <strong>Team Recursion</strong> – Department of CSE</footer>
+<div id="terminal"></div>
+<div class="prompt" id="promptContainer" style="display:none;">
+  <span>&gt;</span>
+  <input id="inputLine" type="text" autofocus autocomplete="off" />
+</div>
 
 <script>
 const terminal = document.getElementById("terminal");
-
-const sampleOutput = [
-  "[Parent] PID = 1024, created child with PID = 1025",
-  "[Child] PID = 1025, waiting for signals...",
-  "[Parent] Sending SIGUSR1 to child...",
-  "[Child] Received SIGUSR1 from parent - Performing Task 1",
-  "[Parent] Sending SIGUSR2 to child...",
-  "[Child] Received SIGUSR2 from parent - Performing Task 2",
-  "[Child] Exiting now.",
-  "[Parent] Communication completed."
-];
-
+const inputLine = document.getElementById("inputLine");
+const promptContainer = document.getElementById("promptContainer");
 let program = 1;
-let runningBuddy = false;
 let memory = Array(32).fill("FREE");
+let runningBuddy = false;
 
-terminal.innerText = "> ";
-
-terminal.addEventListener("keydown", function(e) {
-  if (program !== 2) return; // Only accept typing in program 2
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const lines = terminal.innerText.split("\n");
-    const cmd = lines[lines.length - 1].replace("> ", "").trim();
-    handleBuddyCommand(cmd);
-  }
-});
-
-function changeProgram() {
-  program = document.getElementById("programSelector").value;
-  terminal.innerText = "> ";
-  runningBuddy = false;
-}
-
-async function runProgram() {
-  terminal.innerText = "> ";
-  if (program == 1) {
-    // Show sample output line by line
-    terminal.innerText = "";
-    for (let i = 0; i < sampleOutput.length; i++) {
-      await new Promise(r => setTimeout(r, 900));
-      terminal.innerText += sampleOutput[i] + "\n";
-      terminal.scrollTop = terminal.scrollHeight;
-    }
-  } else {
-    // Buddy system startup
-    runningBuddy = true;
-    memory = Array(32).fill("FREE");
-    print("Memory initialized with total size 32 units.");
-    showMenu();
-  }
-}
-
-function print(text) {
-  terminal.innerText += "\n" + text;
+function println(text) {
+  terminal.innerText += text + "\n";
   terminal.scrollTop = terminal.scrollHeight;
 }
 
-function showMenu() {
-  print("\n1. Allocate\n2. Deallocate\n3. Show Status\n4. Exit\n> ");
+function resetTerminal() {
+  terminal.innerText = "";
 }
 
-function handleBuddyCommand(cmd) {
-  if (!runningBuddy) {
-    print("Program not running. Click ▶ Run Program first.");
-    return;
-  }
+function changeProgram() {
+  program = document.getElementById("programSelector").value;
+  resetTerminal();
+  promptContainer.style.display = "none";
+}
 
-  if (cmd === "1") {
-    print("Usage: alloc <size>\n> ");
-  } else if (cmd.startsWith("alloc")) {
+async function runProgram() {
+  resetTerminal();
+  if (program == 1) {
+    let sampleOutput = [
+      "[Parent] PID = 1024, created child with PID = 1025",
+      "[Child] PID = 1025, waiting for signals...",
+      "[Parent] Sending SIGUSR1...",
+      "[Child] Received SIGUSR1 - Task 1 running",
+      "[Parent] Sending SIGUSR2...",
+      "[Child] Received SIGUSR2 - Task 2 running",
+      "[Child] Exiting...",
+      "[Parent] Communication completed."
+    ];
+    for (let line of sampleOutput) {
+      println(line);
+      await new Promise(r => setTimeout(r, 800));
+    }
+  } else {
+    runningBuddy = true;
+    memory = Array(32).fill("FREE");
+    println("Buddy Memory Allocator Initialized (32 units)");
+    println("Commands: alloc <size>, dealloc <addr>, status, exit");
+    promptContainer.style.display = "flex";
+    inputLine.focus();
+  }
+}
+
+inputLine.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const cmd = inputLine.value.trim();
+    println("> " + cmd);
+    handleCommand(cmd);
+    inputLine.value = "";
+  }
+});
+
+function handleCommand(cmd) {
+  if (!runningBuddy) return;
+  cmd = cmd.replace(/[<>]/g, "").trim(); // ✅ Fix: remove < >
+
+  if (cmd.startsWith("alloc")) {
     const size = parseInt(cmd.split(" ")[1]);
-    const addr = memory.indexOf("FREE");
-    if (addr === -1) {
-      print("No suitable block found.\n> ");
-    } else {
-      memory[addr] = "USED";
-      print(`Allocated ${size} units at address ${addr}\n> `);
+    const idx = memory.indexOf("FREE");
+    if (idx === -1) println("No block available");
+    else {
+      memory[idx] = "USED";
+      println(`Allocated ${size} units at block ${idx}`);
     }
   } else if (cmd.startsWith("dealloc")) {
     const addr = parseInt(cmd.split(" ")[1]);
-    if (memory[addr] === "USED") {
+    if (!isNaN(addr) && memory[addr] === "USED") {
       memory[addr] = "FREE";
-      print(`Deallocated block at address ${addr}\n> `);
+      println(`Deallocated block ${addr}`);
     } else {
-      print("Invalid address or already free.\n> ");
+      println("Invalid block or already free");
     }
-  } else if (cmd === "3" || cmd === "status") {
-    print("\n--- Memory Status ---");
-    memory.forEach((b, i) => print(`Block ${i}: ${b}`));
-    print("---------------------\n> ");
-  } else if (cmd === "4" || cmd === "exit") {
-    print("Exiting Buddy System...");
+  } else if (cmd === "status") {
+    println("--- Memory Status ---");
+    memory.forEach((b, i) => println(`Block ${i}: ${b}`));
+  } else if (cmd === "exit") {
+    println("Exiting Buddy Allocator...");
+    promptContainer.style.display = "none";
     runningBuddy = false;
   } else {
-    print("Unknown command. Try: 1, alloc <size>, dealloc <addr>, status, exit\n> ");
+    println("Unknown command. Try: alloc <size>, dealloc <addr>, status, exit");
+  }
+}
+</script>
+
+</body>
+</html>
+
+function changeProgram() {
+  program = document.getElementById("programSelector").value;
+  resetTerminal();
+  promptContainer.style.display = "none";
+}
+
+async function runProgram() {
+  resetTerminal();
+  if (program == 1) {
+    let sampleOutput = [
+      "[Parent] PID = 1024, created child with PID = 1025",
+      "[Child] PID = 1025, waiting for signals...",
+      "[Parent] Sending SIGUSR1...",
+      "[Child] Received SIGUSR1 - Task 1 running",
+      "[Parent] Sending SIGUSR2...",
+      "[Child] Received SIGUSR2 - Task 2 running",
+      "[Child] Exiting...",
+      "[Parent] Communication completed."
+    ];
+    for (let line of sampleOutput) {
+      println(line);
+      await new Promise(r => setTimeout(r, 800));
+    }
+  } else {
+    runningBuddy = true;
+    memory = Array(32).fill("FREE");
+    println("Buddy Memory Allocator Initialized (32 units)");
+    println("Commands: alloc <size>, dealloc <addr>, status, exit");
+    promptContainer.style.display = "flex";
+    inputLine.focus();
+  }
+}
+
+inputLine.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const cmd = inputLine.value.trim();
+    println("> " + cmd);
+    handleCommand(cmd);
+    inputLine.value = "";
+  }
+});
+
+function handleCommand(cmd) {
+  if (!runningBuddy) return;
+  cmd = cmd.replace(/[<>]/g, "").trim(); // ✅ Fix: remove < >
+
+  if (cmd.startsWith("alloc")) {
+    const size = parseInt(cmd.split(" ")[1]);
+    const idx = memory.indexOf("FREE");
+    if (idx === -1) println("No block available");
+    else {
+      memory[idx] = "USED";
+      println(`Allocated ${size} units at block ${idx}`);
+    }
+  } else if (cmd.startsWith("dealloc")) {
+    const addr = parseInt(cmd.split(" ")[1]);
+    if (!isNaN(addr) && memory[addr] === "USED") {
+      memory[addr] = "FREE";
+      println(`Deallocated block ${addr}`);
+    } else {
+      println("Invalid block or already free");
+    }
+  } else if (cmd === "status") {
+    println("--- Memory Status ---");
+    memory.forEach((b, i) => println(`Block ${i}: ${b}`));
+  } else if (cmd === "exit") {
+    println("Exiting Buddy Allocator...");
+    promptContainer.style.display = "none";
+    runningBuddy = false;
+  } else {
+    println("Unknown command. Try: alloc <size>, dealloc <addr>, status, exit");
   }
 }
 </script>
